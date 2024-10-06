@@ -39,11 +39,11 @@ function displayElementiSacri(elementi) {
     const container = document.getElementById('elementsContainer');
     container.innerHTML = ''; // Pulisci il contenitore
 
-    elementi.forEach(async elemento => {
+    elementi.forEach(elemento => {
         const elementDiv = document.createElement('div');
         elementDiv.className = 'element';
         elementDiv.innerHTML = `
-            <strong>ID:</strong> ${elemento._id} <br>
+            <strong>ID:</strong> ${elemento.id} <br>
             <strong>Nome:</strong> ${elemento.name} <br>
             <strong>Posizione:</strong> ${elemento.location} <br>
             <strong>Tipo:</strong> ${elemento.type} <br>
@@ -52,14 +52,12 @@ function displayElementiSacri(elementi) {
             <strong>Coordinate:</strong> ${elemento.coordinates?.type} (${elemento.coordinates?.coordinates.join(', ')}) <br>
             <strong>Campi Dinamici:</strong> ${JSON.stringify(elemento.dynamicFields || {})} <br>
             <button onclick="editElemento('${elemento.name}')">Modifica</button>
+            <button onclick="fetchRelatedSacredPlaces('${elemento.id}')">Vedi Luoghi Correlati</button>
         `;
-
-        // Richiama la funzione per ottenere i luoghi sacri correlati
-        await fetchRelatedSacredPlaces(elemento.id, elementDiv);
-
         container.appendChild(elementDiv);
     });
 }
+
 
 // Funzione per modificare un elemento sacro
 async function editElemento(name) {
