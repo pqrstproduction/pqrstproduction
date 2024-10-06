@@ -68,19 +68,21 @@ function displayElementiSacri(elementi) {
 
         // Contenuto dell'elemento
         elementDiv.innerHTML = `
-            <div class="element">
-                <strong>ID:</strong> ${elemento._id} <br>
-                <strong>Nome:</strong> ${elemento.name} <br>
-                <strong>Posizione:</strong> ${elemento.location} <br>
-                <strong>Tipo:</strong> ${elemento.type} <br>
-                <strong>Categoria:</strong> ${elemento.category} <br>
-                <strong>Elemento Sacro Correlato:</strong> ${elemento.related_sacred_place || 'N/A'} <br>
-                <strong>Coordinate:</strong> ${elemento.coordinates?.type} (${elemento.coordinates?.coordinates.join(', ')}) <br>
-                <strong>Campi Dinamici:</strong> ${JSON.stringify(elemento.dynamicFields || {})} <br>
-                <button class="btn btn-primary" onclick='editElemento(${JSON.stringify(elemento)})'>Modifica</button>
-                <button class="btn btn-secondary" onclick="fetchRelatedSacredPlaces('${elemento._id}')">Vedi Luoghi Correlati</button>
-            </div>
-        `;
+        <div class="element">
+            <strong>ID:</strong> ${elemento._id} <br>
+            <strong>Nome:</strong> ${elemento.name} <br>
+            <strong>Posizione:</strong> ${elemento.location} <br>
+            <strong>Tipo:</strong> ${elemento.type} <br>
+            <strong>Categoria:</strong> ${elemento.category} <br>
+            <strong>Descrizione:</strong> ${elemento.description || 'N/A'} <br>
+            <strong>Elemento Sacro Correlato:</strong> ${elemento.related_sacred_place || 'N/A'} <br>
+            <strong>Coordinate:</strong> ${elemento.coordinates?.type} (${elemento.coordinates?.coordinates.join(', ')}) <br>
+            <strong>Campi Dinamici:</strong> ${JSON.stringify(elemento.dynamicFields || {})} <br>
+            <button class="btn btn-primary" onclick='editElemento(${JSON.stringify(elemento)})'>Modifica</button>
+            <button class="btn btn-secondary" onclick="fetchRelatedSacredPlaces('${elemento._id}')">Vedi Luoghi Correlati</button>
+        </div>
+    `;
+    
 
         // Aggiungi il div dell'elemento al contenitore
         container.appendChild(elementDiv);
@@ -101,6 +103,7 @@ document.getElementById('elementName').value = elemento.name || ''; // Usa una s
 document.getElementById('elementLocation').value = elemento.location || ''; // Usa una stringa vuota se null
 document.getElementById('elementType').value = elemento.type || ''; // Usa una stringa vuota se null
 document.getElementById('elementCategory').value = elemento.category || ''; // Usa una stringa vuota se null
+document.getElementById('elementDescription').value = elemento.description || '';  // Aggiunto campo Descrizione
 
 // Verifica se le coordinate esistono e sono un array, altrimenti usa una stringa vuota
 if (elemento.coordinates && elemento.coordinates.coordinates) {

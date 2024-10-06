@@ -51,7 +51,11 @@
                 <label for="coordinates">Coordinate (es. 41.9028,12.4964):</label>
                 <input type="text" class="form-control" id="coordinates" required>
             </div>
-    
+            <div class="form-group">
+                <label for="description">Descrizione:</label>
+                <textarea class="form-control" id="description" rows="3"></textarea>
+            </div>
+            
             <div id="dynamicFieldsContainer"></div>
             <button type="button" id="addDynamicField" class="btn btn-secondary">Aggiungi Campo Dinamico</button><br>
             <button type="submit" class="btn btn-primary">Aggiungi Elemento Sacro</button>
@@ -89,7 +93,11 @@
                     <label for="related">Luogo Sacro Correlato:</label>
                     <input type="text" class="form-control" id="relatedSacredId">
                 </div>
-    
+                <div class="form-group">
+                    <label for="elementDescription">Descrizione:</label>
+                    <textarea class="form-control" id="elementDescription" name="description" rows="3"></textarea>
+                </div>
+                
                 <h4>Campi Dinamici:</h4>
                 <div id="dynamicFieldsContainer"></div>
     
