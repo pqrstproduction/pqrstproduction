@@ -15,6 +15,9 @@
             border: 1px solid #ccc;
             border-radius: 5px;
         }
+        .dynamic-field {
+            margin-top: 5px;
+        }
     </style>
 </head>
 <body>
@@ -36,6 +39,11 @@
         <input type="text" id="category" required><br>
         <label for="related">Luogo Sacro Correlato:</label><br>
         <input type="text" id="related"><br>
+
+        <h3>Campi Dinamici</h3>
+        <div id="dynamicFields"></div>
+        <button type="button" onclick="addDynamicField()">Aggiungi Campo Dinamico</button><br><br>
+
         <button type="submit">Aggiungi Elemento Sacro</button>
     </form>
 
@@ -52,8 +60,11 @@
             <input type="text" id="editCategory"><br>
             <label for="editRelated">Elemento Sacro Correlato:</label><br>
             <input type="text" id="editRelated"><br>
-            <label for="editColor">Colore (opzionale):</label><br>
-            <input type="text" id="editColor" placeholder="Inserisci il colore"><br>
+
+            <h3>Campi Dinamici</h3>
+            <div id="editDynamicFields"></div>
+            <button type="button" onclick="addEditDynamicField()">Aggiungi Campo Dinamico</button><br><br>
+
             <button type="button" onclick="submitEdit()">Salva Modifiche</button>
         </form>
     </div>
@@ -76,6 +87,13 @@
             container.innerHTML = ''; // Pulisci il contenitore
 
             elementi.forEach(elemento => {
+                let dynamicFields = '';
+                for (const [key, value] of Object.entries(elemento)) {
+                    if (!['name', 'location', 'type', 'category', 'related_sacred_place'].includes(key)) {
+                        dynamicFields += `<strong>${key}:</strong> ${value} <br>`;
+                    }
+                }
+
                 const elementDiv = document.createElement('div');
                 elementDiv.className = 'element';
                 elementDiv.innerHTML = `
@@ -84,14 +102,26 @@
                     <strong>Tipo:</strong> ${elemento.type} <br>
                     <strong>Categoria:</strong> ${elemento.category} <br>
                     <strong>Elemento Sacro Correlato:</strong> ${elemento.related_sacred_place || 'N/A'} <br>
-                    <strong>Colore:</strong> ${elemento.colore || 'N/A'} <br>
+                    ${dynamicFields}
                     <button onclick="editElemento('${elemento.name}')">Modifica</button>
                 `;
                 container.appendChild(elementDiv);
             });
         }
 
-        // Funzione per visualizzare il form di modifica e riempirlo con i dati dell'elemento
+        // Funzione per aggiungere un campo dinamico al form di aggiunta
+        function addDynamicField() {
+            const container = document.getElementById('dynamicFields');
+            const div = document.createElement('div');
+            div.className = 'dynamic-field';
+            div.innerHTML = `
+                <input type="text" placeholder="Nome campo" class="dynamic-key">
+                <input type="text" placeholder="Valore" class="dynamic-value">
+            `;
+            container.appendChild(div);
+        }
+
+        // Funzione per modificare un elemento sacro
         function editElemento(name) {
             const elemento = elementiSacri.find(e => e.name === name);
             if (elemento) {
@@ -100,11 +130,36 @@
                 document.getElementById('editType').value = elemento.type;
                 document.getElementById('editCategory').value = elemento.category;
                 document.getElementById('editRelated').value = elemento.related_sacred_place || '';
-                document.getElementById('editColor').value = elemento.colore || ''; // Inserisci il valore esistente
+
+                const dynamicFieldsContainer = document.getElementById('editDynamicFields');
+                dynamicFieldsContainer.innerHTML = ''; // Pulisci i campi dinamici
+                for (const [key, value] of Object.entries(elemento)) {
+                    if (!['name', 'location', 'type', 'category', 'related_sacred_place'].includes(key)) {
+                        const div = document.createElement('div');
+                        div.className = 'dynamic-field';
+                        div.innerHTML = `
+                            <input type="text" class="dynamic-key" value="${key}" readonly>
+                            <input type="text" class="dynamic-value" value="${value}">
+                        `;
+                        dynamicFieldsContainer.appendChild(div);
+                    }
+                }
 
                 // Mostra il form di modifica
                 document.getElementById('editContainer').style.display = 'block';
             }
+        }
+
+        // Aggiungi campo dinamico nella modifica
+        function addEditDynamicField() {
+            const container = document.getElementById('editDynamicFields');
+            const div = document.createElement('div');
+            div.className = 'dynamic-field';
+            div.innerHTML = `
+                <input type="text" placeholder="Nome campo" class="dynamic-key">
+                <input type="text" placeholder="Valore" class="dynamic-value">
+            `;
+            container.appendChild(div);
         }
 
         // Funzione per inviare i dati modificati
@@ -113,9 +168,15 @@
                 location: document.getElementById('editLocation').value,
                 type: document.getElementById('editType').value,
                 category: document.getElementById('editCategory').value,
-                related_sacred_place: document.getElementById('editRelated').value,
-                colore: document.getElementById('editColor').value || null // Campo dinamico, può essere nullo
+                related_sacred_place: document.getElementById('editRelated').value
             };
+
+            const dynamicFields = document.querySelectorAll('#editDynamicFields .dynamic-field');
+            dynamicFields.forEach(field => {
+                const key = field.querySelector('.dynamic-key').value;
+                const value = field.querySelector('.dynamic-value').value;
+                updateData[key] = value;
+            });
 
             const name = document.getElementById('editName').value;
 
@@ -141,6 +202,7 @@
         }
 
         // Funzione per aggiungere un nuovo elemento sacro
+  // Funzione per aggiungere un nuovo elemento sacro
         document.getElementById('addElementForm').addEventListener('submit', async function(event) {
             event.preventDefault(); // Impedisce il comportamento predefinito del form
 
