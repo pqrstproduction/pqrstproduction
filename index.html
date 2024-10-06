@@ -15,8 +15,8 @@
             border: 1px solid #ccc;
             border-radius: 5px;
         }
-        .dynamic-field {
-            margin-top: 5px;
+        .dynamic-fields {
+            margin-top: 10px;
         }
     </style>
 </head>
@@ -40,44 +40,28 @@
         <label for="related">Luogo Sacro Correlato:</label><br>
         <input type="text" id="related"><br>
 
-        <h3>Campi Dinamici</h3>
-        <div id="dynamicFields"></div>
-        <button type="button" onclick="addDynamicField()">Aggiungi Campo Dinamico</button><br><br>
+        <div class="dynamic-fields" id="dynamicFieldsContainer">
+            <h3>Aggiungi Campi Dinamici</h3>
+            <div>
+                <label for="dynamicKey">Chiave:</label>
+                <input type="text" id="dynamicKey">
+                <label for="dynamicValue">Valore:</label>
+                <input type="text" id="dynamicValue">
+                <button type="button" onclick="addDynamicField()">Aggiungi Campo</button>
+            </div>
+            <div id="addedFields"></div>
+        </div>
 
         <button type="submit">Aggiungi Elemento Sacro</button>
     </form>
 
-    <div id="editContainer" style="display:none;">
-        <h2>Modifica Elemento Sacro</h2>
-        <form id="editForm">
-            <label for="editName">Nome:</label><br>
-            <input type="text" id="editName" readonly><br>
-            <label for="editLocation">Posizione:</label><br>
-            <input type="text" id="editLocation"><br>
-            <label for="editType">Tipo:</label><br>
-            <input type="text" id="editType"><br>
-            <label for="editCategory">Categoria:</label><br>
-            <input type="text" id="editCategory"><br>
-            <label for="editRelated">Elemento Sacro Correlato:</label><br>
-            <input type="text" id="editRelated"><br>
-
-            <h3>Campi Dinamici</h3>
-            <div id="editDynamicFields"></div>
-            <button type="button" onclick="addEditDynamicField()">Aggiungi Campo Dinamico</button><br><br>
-
-            <button type="button" onclick="submitEdit()">Salva Modifiche</button>
-        </form>
-    </div>
-
     <script>
         const apiBaseUrl = 'https://66b6115693a4f24a662b.appwrite.global/api';
-        let elementiSacri = [];
 
         // Funzione per ottenere gli elementi sacri
         async function fetchElementiSacri() {
             const response = await fetch(`${apiBaseUrl}?endpoint=getElementoSacro`);
             const data = await response.json();
-            elementiSacri = data;
             displayElementiSacri(data);
         }
 
@@ -87,13 +71,6 @@
             container.innerHTML = ''; // Pulisci il contenitore
 
             elementi.forEach(elemento => {
-                let dynamicFields = '';
-                for (const [key, value] of Object.entries(elemento)) {
-                    if (!['name', 'location', 'type', 'category', 'related_sacred_place'].includes(key)) {
-                        dynamicFields += `<strong>${key}:</strong> ${value} <br>`;
-                    }
-                }
-
                 const elementDiv = document.createElement('div');
                 elementDiv.className = 'element';
                 elementDiv.innerHTML = `
@@ -102,99 +79,52 @@
                     <strong>Tipo:</strong> ${elemento.type} <br>
                     <strong>Categoria:</strong> ${elemento.category} <br>
                     <strong>Elemento Sacro Correlato:</strong> ${elemento.related_sacred_place || 'N/A'} <br>
-                    ${dynamicFields}
-                    <button onclick="editElemento('${elemento.name}')">Modifica</button>
                 `;
+                Object.keys(elemento).forEach(key => {
+                    if (!['name', 'location', 'type', 'category', 'related_sacred_place'].includes(key)) {
+                        elementDiv.innerHTML += `<strong>${key}:</strong> ${elemento[key]} <br>`;
+                    }
+                });
+                elementDiv.innerHTML += `<button onclick="editElemento('${elemento.name}')">Modifica</button>`;
                 container.appendChild(elementDiv);
             });
         }
 
-        // Funzione per aggiungere un campo dinamico al form di aggiunta
+        // Funzione per aggiungere un campo dinamico
         function addDynamicField() {
-            const container = document.getElementById('dynamicFields');
-            const div = document.createElement('div');
-            div.className = 'dynamic-field';
-            div.innerHTML = `
-                <input type="text" placeholder="Nome campo" class="dynamic-key">
-                <input type="text" placeholder="Valore" class="dynamic-value">
-            `;
-            container.appendChild(div);
-        }
+            const key = document.getElementById('dynamicKey').value;
+            const value = document.getElementById('dynamicValue').value;
+            const addedFieldsContainer = document.getElementById('addedFields');
 
-        // Funzione per modificare un elemento sacro
-        function editElemento(name) {
-            const elemento = elementiSacri.find(e => e.name === name);
-            if (elemento) {
-                document.getElementById('editName').value = elemento.name;
-                document.getElementById('editLocation').value = elemento.location;
-                document.getElementById('editType').value = elemento.type;
-                document.getElementById('editCategory').value = elemento.category;
-                document.getElementById('editRelated').value = elemento.related_sacred_place || '';
-
-                const dynamicFieldsContainer = document.getElementById('editDynamicFields');
-                dynamicFieldsContainer.innerHTML = ''; // Pulisci i campi dinamici
-                for (const [key, value] of Object.entries(elemento)) {
-                    if (!['name', 'location', 'type', 'category', 'related_sacred_place'].includes(key)) {
-                        const div = document.createElement('div');
-                        div.className = 'dynamic-field';
-                        div.innerHTML = `
-                            <input type="text" class="dynamic-key" value="${key}" readonly>
-                            <input type="text" class="dynamic-value" value="${value}">
-                        `;
-                        dynamicFieldsContainer.appendChild(div);
-                    }
-                }
-
-                // Mostra il form di modifica
-                document.getElementById('editContainer').style.display = 'block';
+            if (key && value) {
+                const fieldDiv = document.createElement('div');
+                fieldDiv.innerHTML = `<strong>${key}:</strong> ${value} <br>`;
+                addedFieldsContainer.appendChild(fieldDiv);
+                document.getElementById('dynamicKey').value = ''; // Reset input
+                document.getElementById('dynamicValue').value = ''; // Reset input
             }
         }
 
-        // Aggiungi campo dinamico nella modifica
-        function addEditDynamicField() {
-            const container = document.getElementById('editDynamicFields');
-            const div = document.createElement('div');
-            div.className = 'dynamic-field';
-            div.innerHTML = `
-                <input type="text" placeholder="Nome campo" class="dynamic-key">
-                <input type="text" placeholder="Valore" class="dynamic-value">
-            `;
-            container.appendChild(div);
-        }
-
-        // Funzione per inviare i dati modificati
-        async function submitEdit() {
-            const updateData = {
-                location: document.getElementById('editLocation').value,
-                type: document.getElementById('editType').value,
-                category: document.getElementById('editCategory').value,
-                related_sacred_place: document.getElementById('editRelated').value
-            };
-
-            const dynamicFields = document.querySelectorAll('#editDynamicFields .dynamic-field');
-            dynamicFields.forEach(field => {
-                const key = field.querySelector('.dynamic-key').value;
-                const value = field.querySelector('.dynamic-value').value;
-                updateData[key] = value;
-            });
-
-            const name = document.getElementById('editName').value;
+        // Funzione per modificare un elemento sacro
+        async function editElemento(name) {
+            const dynamicFields = Array.from(document.querySelectorAll('#addedFields div'));
+            const updateData = dynamicFields.reduce((acc, fieldDiv) => {
+                const [key, value] = fieldDiv.innerHTML.split(': ');
+                acc[key.replace('<strong>', '').replace('</strong>', '').trim()] = value.trim();
+                return acc;
+            }, {});
 
             const response = await fetch(`${apiBaseUrl}?endpoint=updateElementoSacro`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({
-                    identifier: name,
-                    updateData: updateData
-                })
+                body: JSON.stringify({ identifier: name, updateData })
             });
 
             const result = await response.json();
             if (result.success) {
                 alert('Elemento sacro aggiornato con successo!');
-                document.getElementById('editContainer').style.display = 'none'; // Nascondi il form
                 fetchElementiSacri(); // Ricarica gli elementi
             } else {
                 alert('Errore nell\'aggiornamento dell\'elemento sacro');
@@ -202,7 +132,6 @@
         }
 
         // Funzione per aggiungere un nuovo elemento sacro
-  // Funzione per aggiungere un nuovo elemento sacro
         document.getElementById('addElementForm').addEventListener('submit', async function(event) {
             event.preventDefault(); // Impedisce il comportamento predefinito del form
 
@@ -213,6 +142,13 @@
                 category: document.getElementById('category').value,
                 related_sacred_place: document.getElementById('related').value || null
             };
+
+            // Aggiungi i campi dinamici al nuovo elemento
+            const dynamicFields = Array.from(document.querySelectorAll('#addedFields div'));
+            dynamicFields.forEach(fieldDiv => {
+                const [key, value] = fieldDiv.innerHTML.split(': ');
+                newElement[key.replace('<strong>', '').replace('</strong>', '').trim()] = value.trim();
+            });
 
             const response = await fetch(`${apiBaseUrl}?endpoint=addElementoSacro`, {
                 method: 'POST',
@@ -227,6 +163,7 @@
                 alert('Nuovo elemento sacro aggiunto con successo!');
                 fetchElementiSacri(); // Ricarica gli elementi
                 document.getElementById('addElementForm').reset(); // Resetta il form
+                document.getElementById('addedFields').innerHTML = ''; // Pulisci i campi dinamici
             } else {
                 alert('Errore nell\'aggiunta dell\'elemento sacro');
             }
