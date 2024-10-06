@@ -152,6 +152,7 @@ async function saveChanges(elementoId) {
         location: document.getElementById('elementLocation').value,
         type: document.getElementById('elementType').value,
         category: document.getElementById('elementCategory').value,
+        description: document.getElementById('elementDescription').value,
         related_sacred_place: document.getElementById('relatedSacredId').value, // Usa una stringa vuota se null
         coordinates: {
             type: "Point",
