@@ -93,6 +93,7 @@ function displayElementiSacri(elementi) {
 async function editElemento(elemento) {
     // Mostra il modulo
     document.getElementById('editElementForm').style.display = 'block';
+    document.getElementById('editElementForm').scrollIntoView({ behavior: 'smooth' });
 
 // Popola il modulo con i valori esistenti
 document.getElementById('relatedSacredId').value = elemento.related_sacred_place || ''; // Usa una stringa vuota se null
