@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestione Elementi Sacri</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .element {
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Gestione Elementi Sacri</h1>
+
+    <h2>Elementi Sacri</h2>
+    <div id="elementsContainer"></div>
+
+    <h2>Aggiungi Nuovo Elemento Sacro</h2>
+    <form id="addElementForm">
+        <label for="name">Nome:</label><br>
+        <input type="text" id="name" required><br>
+        <label for="location">Posizione:</label><br>
+        <input type="text" id="location" required><br>
+        <label for="type">Tipo:</label><br>
+        <input type="text" id="type" required><br>
+        <label for="category">Categoria:</label><br>
+        <input type="text" id="category" required><br>
+        <label for="related">Luogo Sacro Correlato:</label><br>
+        <input type="text" id="related"><br>
+        <button type="submit">Aggiungi Elemento Sacro</button>
+    </form>
+
+    <script>
+        const apiBaseUrl = 'https://66b6115693a4f24a662b.appwrite.global/api';
+
+        // Funzione per ottenere gli elementi sacri
+        async function fetchElementiSacri() {
+            const response = await fetch(`${apiBaseUrl}?endpoint=getElementoSacro`);
+            const data = await response.json();
+            displayElementiSacri(data);
+        }
+
+        // Funzione per visualizzare gli elementi sacri
+        function displayElementiSacri(elementi) {
+            const container = document.getElementById('elementsContainer');
+            container.innerHTML = ''; // Pulisci il contenitore
+
+            elementi.forEach(elemento => {
+                const elementDiv = document.createElement('div');
+                elementDiv.className = 'element';
+                elementDiv.innerHTML = `
+                    <strong>${elemento.name}</strong> (Tipo: ${elemento.type})
+                    <button onclick="editElemento('${elemento.name}')">Modifica</button>
+                `;
+                container.appendChild(elementDiv);
+            });
+        }
+
+        // Funzione per modificare un elemento sacro
+        async function editElemento(name) {
+            const newColore = prompt(`Inserisci il nuovo colore per ${name}:`);
+            if (newColore) {
+                const updateData = {
+                    identifier: name,
+                    updateData: { colore: newColore }
+                };
+                const response = await fetch(`${apiBaseUrl}?endpoint=updateElementoSacro`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(updateData)
+                });
+                const result = await response.json();
+                if (result.success) {
+                    alert('Elemento sacro aggiornato con successo!');
+                    fetchElementiSacri(); // Ricarica gli elementi
+                } else {
+                    alert('Errore nell\'aggiornamento dell\'elemento sacro');
+                }
+            }
+        }
+
+        // Funzione per aggiungere un nuovo elemento sacro
+        document.getElementById('addElementForm').addEventListener('submit', async function(event) {
+            event.preventDefault(); // Impedisce il comportamento predefinito del form
+
+            const newElement = {
+                name: document.getElementById('name').value,
+                location: document.getElementById('location').value,
+                type: document.getElementById('type').value,
+                category: document.getElementById('category').value,
+                related_sacred_place: document.getElementById('related').value || null
+            };
+
+            const response = await fetch(`${apiBaseUrl}?endpoint=addElementoSacro`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(newElement)
+            });
+
+            const result = await response.json();
+            if (result.success) {
+                alert('Nuovo elemento sacro aggiunto con successo!');
+                fetchElementiSacri(); // Ricarica gli elementi
+                document.getElementById('addElementForm').reset(); // Resetta il form
+            } else {
+                alert('Errore nell\'aggiunta dell\'elemento sacro');
+            }
+        });
+
+        // Carica gli elementi sacri all'avvio della pagina
+        fetchElementiSacri();
+    </script>
+</body>
+</html>
