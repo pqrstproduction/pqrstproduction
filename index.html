@@ -37,6 +37,15 @@
         <button type="button" id="addDynamicField">Aggiungi Campo Dinamico</button><br>
         <button type="submit">Aggiungi Elemento Sacro</button>
     </form>
+<div id="editFormContainer" style="display:none;">
+    <h3>Modifica Elemento Sacro</h3>
+    <form id="editElementForm">
+        <label for="dynamicFields">Campi Dinamici (es. "colore:rosso;dimensione:grande"):</label><br>
+        <textarea id="dynamicFields" rows="4" cols="50"></textarea><br>
+        <button type="submit">Salva</button>
+        <button type="button" onclick="closeEditForm()">Annulla</button>
+    </form>
+</div>
 
     <script src="script.js"></script> <!-- Collegamento al file JavaScript -->
 </body>
