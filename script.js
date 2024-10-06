@@ -47,6 +47,8 @@ function displayElementiSacri(elementi) {
     elementi.forEach(elemento => {
         const elementDiv = document.createElement('div');
         elementDiv.className = 'element';
+        elementDiv.setAttribute('data-id', elemento._id); // Aggiungi l'attributo data-id
+
         elementDiv.innerHTML = `
             <strong>ID:</strong> ${elemento._id} <br>
             <strong>Nome:</strong> ${elemento.name} <br>
@@ -56,9 +58,11 @@ function displayElementiSacri(elementi) {
             <strong>Elemento Sacro Correlato:</strong> ${elemento.related_sacred_place || 'N/A'} <br>
             <strong>Coordinate:</strong> ${elemento.coordinates?.type} (${elemento.coordinates?.coordinates.join(', ')}) <br>
             <strong>Campi Dinamici:</strong> ${JSON.stringify(elemento.dynamicFields || {})} <br>
-            <button onclick="editElemento('${elemento.name}')">Modifica</button>
+            <button onclick="editElemento('${elemento._id}')">Modifica</button>
             <button onclick="fetchRelatedSacredPlaces('${elemento._id}')">Vedi Luoghi Correlati</button>
         `;
+
+        // Aggiungi il div dell'elemento al contenitore
         container.appendChild(elementDiv);
     });
 }
