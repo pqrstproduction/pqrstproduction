@@ -52,7 +52,7 @@ function displayElementiSacri(elementi) {
             <strong>Coordinate:</strong> ${elemento.coordinates?.type} (${elemento.coordinates?.coordinates.join(', ')}) <br>
             <strong>Campi Dinamici:</strong> ${JSON.stringify(elemento.dynamicFields || {})} <br>
             <button onclick="editElemento('${elemento.name}')">Modifica</button>
-            <button onclick="fetchRelatedSacredPlaces('${elemento.id}')">Vedi Luoghi Correlati</button>
+            <button onclick="fetchRelatedSacredPlaces('${elemento._id}')">Vedi Luoghi Correlati</button>
         `;
         container.appendChild(elementDiv);
     });
