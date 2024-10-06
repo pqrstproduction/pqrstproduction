@@ -64,9 +64,9 @@ function displayElementiSacri(elementi) {
     elementi.forEach(elemento => {
         // Crea un div per l'elemento con classi Bootstrap per il layout
         const elementDiv = document.createElement('div');
-        elementDiv.className = 'col-sm-6 col-md-4 col-lg-3'; // Colonne responsivi
+        elementDiv.className = 'col-sm-6 col-md-4 col-lg-3 d-flex'; // Colonne responsivi
         elementDiv.setAttribute('data-id', elemento._id); // Aggiungi l'attributo data-id
-
+    
         // Contenuto dell'elemento
         elementDiv.innerHTML = `
         <div class="element">
@@ -82,9 +82,8 @@ function displayElementiSacri(elementi) {
             <button class="btn btn-primary" onclick='editElemento(${JSON.stringify(elemento)})'>Modifica</button>
             <button class="btn btn-secondary" onclick="fetchRelatedSacredPlaces('${elemento._id}')">Vedi Luoghi Correlati</button>
         </div>
-    `;
+        `;
     
-
         // Aggiungi il div dell'elemento al contenitore
         container.appendChild(elementDiv);
     });

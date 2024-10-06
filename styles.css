@@ -27,11 +27,26 @@ h1, h2, h3, h4 {
     border-radius: 5px;
     padding: 15px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column; /* Assicura che gli elementi si allineino verticalmente */
+    justify-content: space-between; /* Spazia uniformemente il contenuto */
+    height: 100%; /* Rendi l'altezza dell'elemento il 100% del contenitore */
 }
 
 /* Pulsanti */
 button {
     margin-top: 10px;
+}
+
+/* Stile per garantire che tutte le colonne abbiano la stessa altezza */
+.element-container {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.element-container .col-sm-6 {
+    display: flex;
+    flex-direction: column;
 }
 
 /* Loader */
@@ -60,9 +75,11 @@ button {
         opacity: 1;
     }
 }
+
 .startLoader {
     display: none;
 }
+
 #loader.active {
     display: block; /* Mostra il loader */
     animation: fadeIn 0.3s ease-in-out; /* Effetto di fade-in */
