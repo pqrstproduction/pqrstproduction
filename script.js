@@ -91,29 +91,30 @@ function displayElementiSacri(elementi) {
     elementi.forEach(elemento => {
         // Crea un div per l'elemento con classi Bootstrap per il layout
         const elementDiv = document.createElement('div');
-        elementDiv.className = 'col-sm-6 col-md-4 col-lg-3 d-flex'; // Colonne responsivi
+        elementDiv.className = `col-sm-6 col-md-4 col-lg-3 ${elemento.type === 'sacred_place' ? 'sacred-place' : 'other-element'}`; // Imposta la classe in base al tipo di elemento
         elementDiv.setAttribute('data-id', elemento._id); // Aggiungi l'attributo data-id
     
         // Contenuto dell'elemento
         elementDiv.innerHTML = `
-        <div class="element">
-            <strong>ID:</strong> ${elemento._id} <br>
-            <strong>Nome:</strong> ${elemento.name} <br>
-            <strong>Posizione:</strong> ${elemento.location} <br>
-            <strong>Tipo:</strong> ${elemento.type} <br>
-            <strong>Categoria:</strong> ${elemento.category} <br>
-            <strong>Descrizione:</strong> ${elemento.description || 'N/A'} <br>
-            <strong>Elemento Sacro Correlato:</strong> ${elemento.related_sacred_place || 'N/A'} <br>
-            <strong>Coordinate:</strong> ${elemento.coordinates?.type} (${elemento.coordinates?.coordinates.join(', ')}) <br>
-            <strong>Campi Dinamici:</strong> ${JSON.stringify(elemento.dynamicFields || {})} <br>
-            <button class="btn btn-primary" onclick='editElemento(${JSON.stringify(elemento)})'>Modifica</button>
-            <button class="btn btn-secondary" onclick="fetchRelatedSacredPlaces('${elemento._id}')">Vedi Luoghi Correlati</button>
-        </div>
+            <div class="element">
+                <strong>ID:</strong> ${elemento._id} <br>
+                <strong>Nome:</strong> ${elemento.name} <br>
+                <strong>Posizione:</strong> ${elemento.location} <br>
+                <strong>Tipo:</strong> ${elemento.type} <br>
+                <strong>Categoria:</strong> ${elemento.category} <br>
+                <strong>Descrizione:</strong> ${elemento.description || 'N/A'} <br>
+                <strong>Elemento Sacro Correlato:</strong> ${elemento.related_sacred_place || 'N/A'} <br>
+                <strong>Coordinate:</strong> ${elemento.coordinates?.type} (${elemento.coordinates?.coordinates.join(', ')}) <br>
+                <strong>Campi Dinamici:</strong> ${JSON.stringify(elemento.dynamicFields || {})} <br>
+                <button class="btn btn-primary" onclick='editElemento(${JSON.stringify(elemento)})'>Modifica</button>
+                <button class="btn btn-secondary" onclick="fetchRelatedSacredPlaces('${elemento._id}')">Vedi Luoghi Correlati</button>
+            </div>
         `;
     
         // Aggiungi il div dell'elemento al contenitore
         container.appendChild(elementDiv);
     });
+    
 }
 
 
