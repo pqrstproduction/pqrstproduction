@@ -126,6 +126,7 @@ async function saveChanges(elementoId) {
         location: document.getElementById('elementLocation').value,
         type: document.getElementById('elementType').value,
         category: document.getElementById('elementCategory').value,
+        related_sacred_place: document.getElementById('relatedSacredId'), // Usa una stringa vuota se null
         coordinates: {
             type: "Point",
             coordinates: document.getElementById('elementCoordinates').value.split(',').map(coord => parseFloat(coord.trim()))
