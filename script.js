@@ -1,15 +1,16 @@
 const apiBaseUrl = 'https://66b6115693a4f24a662b.appwrite.global/api';
 
-// Funzione per mostrare il loader
 function showLoader() {
-    document.getElementById('loader').style.display = 'block';
+    console.log('Mostrando loader');
+    const loader = document.getElementById('loader');
+    loader.classList.add('active');
 }
 
-// Funzione per nascondere il loader
 function hideLoader() {
-    document.getElementById('loader').style.display = 'none';
+    console.log('Nascondendo loader');
+    const loader = document.getElementById('loader');
+    loader.classList.remove('active');
 }
-
 // Funzione per ottenere gli elementi sacri
 async function fetchElementiSacri() {
     try {
