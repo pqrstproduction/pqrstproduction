@@ -84,3 +84,12 @@ button {
     display: block; /* Mostra il loader */
     animation: fadeIn 0.3s ease-in-out; /* Effetto di fade-in */
 }
+/* Stile per la lista dei luoghi correlati */
+.related-places-list {
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 5px;
+    margin-top: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+

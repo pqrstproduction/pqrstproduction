@@ -25,35 +25,66 @@ async function fetchElementiSacri() {
         console.error('Errore nel recupero degli elementi sacri:', error);
     }
 }
-
 async function fetchRelatedSacredPlaces(elementoId) {
     const elementDiv = document.querySelector(`[data-id="${elementoId}"]`); // Trova il div dell'elemento
 
+    // Verifica se la lista è già stata visualizzata per evitare duplicati
+    if (elementDiv.querySelector('.related-places-list')) {
+        elementDiv.querySelector('.related-places-list').remove(); // Rimuovi la lista se già presente
+    }
+
     // Effettua la richiesta per ottenere i luoghi correlati
     try {
-        showLoader()
+        showLoader();
         const response = await fetch(`${apiBaseUrl}?endpoint=getRelatedSacredPlaces&elementoSacroId=${elementoId}`);
         const relatedPlaces = await response.json();
-        hideLoader()
+        hideLoader();
+
+        const relatedPlacesDiv = document.createElement('div');
+        relatedPlacesDiv.classList.add('related-places-list');
+        relatedPlacesDiv.style.animation = 'fadeIn 0.3s ease-in-out';
+
         if (relatedPlaces.length > 0) {
             // Crea una lista per visualizzare i luoghi correlati
             const relatedList = document.createElement('ul');
+            relatedList.className = 'list-group mt-3'; // Stile Bootstrap
+
             relatedPlaces.forEach(place => {
                 const listItem = document.createElement('li');
-                listItem.textContent = place.name; // Mostra il nome del luogo
+                listItem.className = 'list-group-item d-flex justify-content-between align-items-center';
+
+                // Mostra il nome del luogo
+                listItem.textContent = place.name;
+
+                // Aggiungi pulsante di modifica
+                const editButton = document.createElement('button');
+                editButton.className = 'btn btn-sm btn-outline-primary';
+                editButton.textContent = 'Modifica';
+                editButton.onclick = () => editRelatedPlace(place); // Funzione per modificare il luogo correlato
+                listItem.appendChild(editButton);
+
                 relatedList.appendChild(listItem);
             });
 
             // Aggiungi la lista di luoghi correlati al div dell'elemento
-            elementDiv.appendChild(relatedList);
+            relatedPlacesDiv.appendChild(relatedList);
         } else {
-            elementDiv.innerHTML += '<p>Nessun luogo sacro correlato trovato.</p>';
+            relatedPlacesDiv.innerHTML = '<p class="mt-3">Nessun luogo sacro correlato trovato.</p>';
         }
+
+        elementDiv.appendChild(relatedPlacesDiv);
+
     } catch (error) {
         hideLoader();
         console.error('Errore nel recupero dei luoghi correlati:', error);
         elementDiv.innerHTML += '<p>Errore nel recupero dei luoghi correlati.</p>';
     }
+}
+
+// Funzione per modificare il luogo correlato
+function editRelatedPlace(place) {
+    // Mostra un popup o un modulo per modificare il luogo correlato
+    alert(`Modifica il luogo: ${place.name}`);
 }
 
 
