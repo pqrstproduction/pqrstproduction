@@ -43,7 +43,7 @@ function displayElementiSacri(elementi) {
         const elementDiv = document.createElement('div');
         elementDiv.className = 'element';
         elementDiv.innerHTML = `
-            <strong>ID:</strong> ${elemento.id} <br>
+            <strong>ID:</strong> ${elemento._id} <br>
             <strong>Nome:</strong> ${elemento.name} <br>
             <strong>Posizione:</strong> ${elemento.location} <br>
             <strong>Tipo:</strong> ${elemento.type} <br>
