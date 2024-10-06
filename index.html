@@ -31,14 +31,20 @@
     <form id="addElementForm">
         <label for="name">Nome:</label><br>
         <input type="text" id="name" required><br>
-        <label for="location">Posizione:</label><br>
-        <input type="text" id="location" required><br>
+        
+        <label for="location">Posizione (Tipo: Point, Coordinate: latitudine,longitudine):</label><br>
+        <input type="text" id="locationType" placeholder="Tipo" value="Point" required><br>
+        <input type="text" id="coordinates" placeholder="Coordinate (es. 41.9028,12.4964)" required><br>
+        
         <label for="type">Tipo:</label><br>
         <input type="text" id="type" required><br>
+        
         <label for="category">Categoria:</label><br>
         <input type="text" id="category" required><br>
+        
         <label for="related">Luogo Sacro Correlato:</label><br>
         <input type="text" id="related"><br>
+        
         <div id="dynamicFieldsContainer"></div>
         <button type="button" id="addDynamicField">Aggiungi Campo Dinamico</button><br>
         <button type="submit">Aggiungi Elemento Sacro</button>
@@ -64,7 +70,7 @@
                 elementDiv.className = 'element';
                 elementDiv.innerHTML = `
                     <strong>Nome:</strong> ${elemento.name} <br>
-                    <strong>Luogo:</strong> ${elemento.location} <br>
+                    <strong>Luogo:</strong> ${elemento.location?.type || 'N/A'} (${elemento.location?.coordinates?.join(', ') || 'N/A'}) <br>
                     <strong>Tipo:</strong> ${elemento.type} <br>
                     <strong>Categoria:</strong> ${elemento.category} <br>
                     <strong>Elemento Sacro Correlato:</strong> ${elemento.related_sacred_place || 'N/A'} <br>
@@ -111,9 +117,13 @@
         document.getElementById('addElementForm').addEventListener('submit', async function(event) {
             event.preventDefault(); // Impedisce il comportamento predefinito del form
 
+            const coordinatesInput = document.getElementById('coordinates').value.split(',').map(coord => parseFloat(coord.trim()));
             const newElement = {
                 name: document.getElementById('name').value,
-                location: document.getElementById('location').value,
+                location: {
+                    type: document.getElementById('locationType').value,
+                    coordinates: coordinatesInput,
+                },
                 type: document.getElementById('type').value,
                 category: document.getElementById('category').value,
                 related_sacred_place: document.getElementById('related').value || null,
