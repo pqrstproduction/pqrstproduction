@@ -74,7 +74,7 @@ async function editElemento(elemento) {
     document.getElementById('editElementForm').style.display = 'block';
 
     // Popola il modulo con i valori esistenti
-    document.getElementById('elementRelatedId').value = elemento.related_sacred_place;
+    document.getElementById('relatedSacredId').value = elemento.related_sacred_place;
     document.getElementById('elementName').value = elemento.name;
     document.getElementById('elementLocation').value = elemento.location;
     document.getElementById('elementType').value = elemento.type;
