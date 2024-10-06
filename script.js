@@ -11,12 +11,35 @@ async function fetchElementiSacri() {
     }
 }
 
-// Funzione per visualizzare gli elementi sacri
+async function fetchRelatedSacredPlaces(elementoId, elementDiv) {
+    try {
+        const response = await fetch(`${apiBaseUrl}?endpoint=getRelatedSacredPlaces&elementoSacroId=${elementoId}`);
+        const relatedPlaces = await response.json();
+
+        // Aggiungi i luoghi sacri correlati all'elemento
+        const relatedPlacesDiv = document.createElement('div');
+        relatedPlacesDiv.className = 'related-places';
+        
+        if (relatedPlaces.length > 0) {
+            relatedPlacesDiv.innerHTML = `<strong>Luoghi Sacri Correlati:</strong> <br>`;
+            relatedPlaces.forEach(place => {
+                relatedPlacesDiv.innerHTML += `${place.name} (ID: ${place.id})<br>`;
+            });
+        } else {
+            relatedPlacesDiv.innerHTML = `<strong>Luoghi Sacri Correlati:</strong> N/A <br>`;
+        }
+
+        elementDiv.appendChild(relatedPlacesDiv);
+    } catch (error) {
+        console.error('Errore nel recupero dei luoghi sacri correlati:', error);
+    }
+}
+
 function displayElementiSacri(elementi) {
     const container = document.getElementById('elementsContainer');
     container.innerHTML = ''; // Pulisci il contenitore
 
-    elementi.forEach(elemento => {
+    elementi.forEach(async elemento => {
         const elementDiv = document.createElement('div');
         elementDiv.className = 'element';
         elementDiv.innerHTML = `
@@ -30,6 +53,10 @@ function displayElementiSacri(elementi) {
             <strong>Campi Dinamici:</strong> ${JSON.stringify(elemento.dynamicFields || {})} <br>
             <button onclick="editElemento('${elemento.name}')">Modifica</button>
         `;
+
+        // Richiama la funzione per ottenere i luoghi sacri correlati
+        await fetchRelatedSacredPlaces(elemento.id, elementDiv);
+
         container.appendChild(elementDiv);
     });
 }
