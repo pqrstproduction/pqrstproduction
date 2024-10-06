@@ -73,13 +73,19 @@ async function editElemento(elemento) {
     // Mostra il modulo
     document.getElementById('editElementForm').style.display = 'block';
 
-    // Popola il modulo con i valori esistenti
-    document.getElementById('relatedSacredId').value = elemento.related_sacred_place;
-    document.getElementById('elementName').value = elemento.name;
-    document.getElementById('elementLocation').value = elemento.location;
-    document.getElementById('elementType').value = elemento.type;
-    document.getElementById('elementCategory').value = elemento.category;
+// Popola il modulo con i valori esistenti
+document.getElementById('relatedSacredId').value = elemento.related_sacred_place || ''; // Usa una stringa vuota se null
+document.getElementById('elementName').value = elemento.name || ''; // Usa una stringa vuota se null
+document.getElementById('elementLocation').value = elemento.location || ''; // Usa una stringa vuota se null
+document.getElementById('elementType').value = elemento.type || ''; // Usa una stringa vuota se null
+document.getElementById('elementCategory').value = elemento.category || ''; // Usa una stringa vuota se null
+
+// Verifica se le coordinate esistono e sono un array, altrimenti usa una stringa vuota
+if (elemento.coordinates && elemento.coordinates.coordinates) {
     document.getElementById('elementCoordinates').value = elemento.coordinates.coordinates.join(', ');
+} else {
+    document.getElementById('elementCoordinates').value = ''; // Usa una stringa vuota se le coordinate non esistono
+}
 
     // Popola i campi dinamici
     const dynamicFieldsContainer = document.getElementById('dynamicFieldsContainer');
