@@ -91,7 +91,7 @@ function displayElementiSacri(elementi) {
     elementi.forEach(elemento => {
         // Crea un div per l'elemento con classi Bootstrap per il layout
         const elementDiv = document.createElement('div');
-        elementDiv.className = `col-sm-6 col-md-4 col-lg-3 ${elemento.type === 'Basilica Papale' ? 'sacred-place' : 'other-element'}`; // Imposta la classe in base al tipo di elemento
+        elementDiv.className = `col-sm-6 col-md-4 col-lg-3 ${elemento.type === 'Basilica Papale Maggiore' ? 'sacred-place' : 'other-element'}`; // Imposta la classe in base al tipo di elemento
         elementDiv.setAttribute('data-id', elemento._id); // Aggiungi l'attributo data-id
     
         // Contenuto dell'elemento
