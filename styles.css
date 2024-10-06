@@ -60,7 +60,9 @@ button {
         opacity: 1;
     }
 }
-
+.startLoader {
+    display: none;
+}
 #loader.active {
     display: block; /* Mostra il loader */
     animation: fadeIn 0.3s ease-in-out; /* Effetto di fade-in */

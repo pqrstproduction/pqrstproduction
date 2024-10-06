@@ -4,6 +4,7 @@ function showLoader() {
     console.log('Mostrando loader');
     const loader = document.getElementById('loader');
     loader.classList.add('active');
+    loader.classList.remove('startLoader');
 }
 
 function hideLoader() {
