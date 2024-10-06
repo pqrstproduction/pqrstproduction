@@ -58,7 +58,7 @@ function displayElementiSacri(elementi) {
             <strong>Elemento Sacro Correlato:</strong> ${elemento.related_sacred_place || 'N/A'} <br>
             <strong>Coordinate:</strong> ${elemento.coordinates?.type} (${elemento.coordinates?.coordinates.join(', ')}) <br>
             <strong>Campi Dinamici:</strong> ${JSON.stringify(elemento.dynamicFields || {})} <br>
-            <button onclick="editElemento('${elemento._id}')">Modifica</button>
+            <button onclick="editElemento('${elemento}')">Modifica</button>
             <button onclick="fetchRelatedSacredPlaces('${elemento._id}')">Vedi Luoghi Correlati</button>
         `;
 
