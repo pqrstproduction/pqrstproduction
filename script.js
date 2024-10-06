@@ -1,12 +1,25 @@
 const apiBaseUrl = 'https://66b6115693a4f24a662b.appwrite.global/api';
 
+// Funzione per mostrare il loader
+function showLoader() {
+    document.getElementById('loader').style.display = 'block';
+}
+
+// Funzione per nascondere il loader
+function hideLoader() {
+    document.getElementById('loader').style.display = 'none';
+}
+
 // Funzione per ottenere gli elementi sacri
 async function fetchElementiSacri() {
     try {
+        showLoader()
         const response = await fetch(`${apiBaseUrl}?endpoint=getElementoSacro`);
         const data = await response.json();
         displayElementiSacri(data);
+        hideLoader()
     } catch (error) {
+        hideLoader();
         console.error('Errore nel recupero degli elementi sacri:', error);
     }
 }
@@ -16,9 +29,10 @@ async function fetchRelatedSacredPlaces(elementoId) {
 
     // Effettua la richiesta per ottenere i luoghi correlati
     try {
+        showLoader()
         const response = await fetch(`${apiBaseUrl}?endpoint=getRelatedSacredPlaces&elementoSacroId=${elementoId}`);
         const relatedPlaces = await response.json();
-
+        hideLoader()
         if (relatedPlaces.length > 0) {
             // Crea una lista per visualizzare i luoghi correlati
             const relatedList = document.createElement('ul');
@@ -34,6 +48,7 @@ async function fetchRelatedSacredPlaces(elementoId) {
             elementDiv.innerHTML += '<p>Nessun luogo sacro correlato trovato.</p>';
         }
     } catch (error) {
+        hideLoader();
         console.error('Errore nel recupero dei luoghi correlati:', error);
         elementDiv.innerHTML += '<p>Errore nel recupero dei luoghi correlati.</p>';
     }
@@ -145,6 +160,7 @@ async function saveChanges(elementoId) {
     }
 
     try {
+        showLoader()
         const response = await fetch(`${apiBaseUrl}?endpoint=updateElementoSacro`, {
             method: 'PUT',
             headers: {
@@ -157,6 +173,7 @@ async function saveChanges(elementoId) {
         });
 
         const result = await response.json();
+        hideLoader()
         if (result.success) {
             alert('Elemento sacro aggiornato con successo!');
             fetchElementiSacri(); // Ricarica gli elementi
@@ -165,6 +182,7 @@ async function saveChanges(elementoId) {
             alert('Errore nell\'aggiornamento dell\'elemento sacro');
         }
     } catch (error) {
+        hideLoader()
         console.error('Errore nell\'aggiornamento dell\'elemento sacro:', error);
     }
 }
@@ -200,6 +218,7 @@ document.getElementById('addElementForm').addEventListener('submit', async funct
     });
 
     try {
+        showLoader()
         const response = await fetch(`${apiBaseUrl}?endpoint=addElementoSacro`, {
             method: 'POST',
             headers: {
@@ -209,6 +228,7 @@ document.getElementById('addElementForm').addEventListener('submit', async funct
         });
 
         const result = await response.json();
+        hideLoader()
         if (result.success) {
             alert('Nuovo elemento sacro aggiunto con successo!');
             fetchElementiSacri(); // Ricarica gli elementi
@@ -218,6 +238,7 @@ document.getElementById('addElementForm').addEventListener('submit', async funct
             alert('Errore nell\'aggiunta dell\'elemento sacro');
         }
     } catch (error) {
+        hideLoader()
         console.error('Errore nell\'aggiunta dell\'elemento sacro:', error);
     }
 });
