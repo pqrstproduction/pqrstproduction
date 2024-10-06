@@ -70,57 +70,95 @@ function displayElementiSacri(elementi) {
 
 // Funzione per modificare un elemento sacro
 async function editElemento(elemento) {
-    // Popola il campo del form con i campi dinamici esistenti
-    const dynamicFields = Object.entries(elemento.dynamicFields || {}).map(([key, value]) => `${key}:${value}`).join(';');
-    document.getElementById('dynamicFields').value = dynamicFields;
-
     // Mostra il modulo
-    document.getElementById('editFormContainer').style.display = 'block';
+    document.getElementById('editElementForm').style.display = 'block';
 
-    // Aggiungi un listener per il submit del form
-    const form = document.getElementById('editElementForm');
+    // Popola il modulo con i valori esistenti
+    document.getElementById('elementName').value = elemento.name;
+    document.getElementById('elementLocation').value = elemento.location;
+    document.getElementById('elementType').value = elemento.type;
+    document.getElementById('elementCategory').value = elemento.category;
+    document.getElementById('elementCoordinates').value = elemento.coordinates.coordinates.join(', ');
+
+    // Popola i campi dinamici
+    const dynamicFieldsContainer = document.getElementById('dynamicFieldsContainer');
+    dynamicFieldsContainer.innerHTML = ''; // Pulisci i campi dinamici esistenti
+    for (const [key, value] of Object.entries(elemento.dynamicFields || {})) {
+        const fieldDiv = document.createElement('div');
+        fieldDiv.innerHTML = `
+            <label for="${key}">${key}:</label>
+            <input type="text" id="${key}" name="${key}" value="${value}" /><br />
+        `;
+        dynamicFieldsContainer.appendChild(fieldDiv);
+    }
+
+    // Aggiungi un campo per nuovi campi dinamici
+    const newFieldDiv = document.createElement('div');
+    newFieldDiv.innerHTML = `
+        <label for="newDynamicField">Nuovo Campo Dinamico:</label>
+        <input type="text" id="newDynamicField" name="newDynamicField" placeholder="chiave:valore" /><br />
+    `;
+    dynamicFieldsContainer.appendChild(newFieldDiv);
+
+    // Gestisci l'invio del modulo
+    const form = document.getElementById('formEditElemento');
     form.onsubmit = async (event) => {
-        event.preventDefault(); // Evita il refresh della pagina
-
-        const newFields = document.getElementById('dynamicFields').value;
-
-        if (newFields) {
-            const updateData = newFields.split(';').reduce((acc, field) => {
-                const [key, value] = field.split(':');
-                acc[key.trim()] = value.trim();
-                return acc;
-            }, {});
-
-            try {
-                const response = await fetch(`${apiBaseUrl}?endpoint=updateElementoSacro`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        identifier: elemento.name,
-                        updateData: { dynamicFields: updateData }
-                    })
-                });
-
-                const result = await response.json();
-                if (result.success) {
-                    alert('Elemento sacro aggiornato con successo!');
-                    fetchElementiSacri(); // Ricarica gli elementi
-                    closeEditForm(); // Chiudi il modulo
-                } else {
-                    alert('Errore nell\'aggiornamento dell\'elemento sacro');
-                }
-            } catch (error) {
-                console.error('Errore nell\'aggiornamento dell\'elemento sacro:', error);
-            }
-        }
+        event.preventDefault();
+        await saveChanges(elemento._id);
     };
 }
 
 // Funzione per chiudere il modulo di modifica
 function closeEditForm() {
     document.getElementById('editFormContainer').style.display = 'none';
+}
+
+async function saveChanges(elementoId) {
+    const updateData = {
+        name: document.getElementById('elementName').value,
+        location: document.getElementById('elementLocation').value,
+        type: document.getElementById('elementType').value,
+        category: document.getElementById('elementCategory').value,
+        coordinates: {
+            type: "Point",
+            coordinates: document.getElementById('elementCoordinates').value.split(',').map(coord => parseFloat(coord.trim()))
+        },
+        dynamicFields: {}
+    };
+
+    // Aggiungi campi dinamici
+    const dynamicFieldsContainer = document.getElementById('dynamicFieldsContainer');
+    for (const field of dynamicFieldsContainer.children) {
+        const key = field.children[0].htmlFor;
+        const value = field.children[1].value;
+        if (value) {
+            updateData.dynamicFields[key] = value;
+        }
+    }
+
+    try {
+        const response = await fetch(`${apiBaseUrl}?endpoint=updateElementoSacro`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                identifier: elementoId,
+                updateData: updateData
+            })
+        });
+
+        const result = await response.json();
+        if (result.success) {
+            alert('Elemento sacro aggiornato con successo!');
+            fetchElementiSacri(); // Ricarica gli elementi
+            closeEditForm(); // Chiudi il modulo
+        } else {
+            alert('Errore nell\'aggiornamento dell\'elemento sacro');
+        }
+    } catch (error) {
+        console.error('Errore nell\'aggiornamento dell\'elemento sacro:', error);
+    }
 }
 
 
