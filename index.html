@@ -37,15 +37,32 @@
         <button type="button" id="addDynamicField">Aggiungi Campo Dinamico</button><br>
         <button type="submit">Aggiungi Elemento Sacro</button>
     </form>
-<div id="editFormContainer" style="display:none;">
+<div id="editElementForm" style="display: none;">
     <h3>Modifica Elemento Sacro</h3>
-    <form id="editElementForm">
-        <label for="dynamicFields">Campi Dinamici (es. "colore:rosso;dimensione:grande"):</label><br>
-        <textarea id="dynamicFields" rows="4" cols="50"></textarea><br>
-        <button type="submit">Salva</button>
+    <form id="formEditElemento">
+        <label for="elementName">Nome:</label>
+        <input type="text" id="elementName" name="name" required /><br />
+
+        <label for="elementLocation">Posizione:</label>
+        <input type="text" id="elementLocation" name="location" required /><br />
+
+        <label for="elementType">Tipo:</label>
+        <input type="text" id="elementType" name="type" required /><br />
+
+        <label for="elementCategory">Categoria:</label>
+        <input type="text" id="elementCategory" name="category" required /><br />
+
+        <label for="elementCoordinates">Coordinate (lng, lat):</label>
+        <input type="text" id="elementCoordinates" name="coordinates" required /><br />
+
+        <h4>Campi Dinamici:</h4>
+        <div id="dynamicFieldsContainer"></div>
+
+        <button type="submit">Salva Modifiche</button>
         <button type="button" onclick="closeEditForm()">Annulla</button>
     </form>
 </div>
+
 
     <script src="script.js"></script> <!-- Collegamento al file JavaScript -->
 </body>
