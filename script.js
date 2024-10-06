@@ -16,7 +16,7 @@ async function fetchRelatedSacredPlaces(elementoId) {
 
     // Effettua la richiesta per ottenere i luoghi correlati
     try {
-        const response = await fetch(`/api/related-sacred-places/${elementoId}`);
+        const response = await fetch(`${apiBaseUrl}?endpoint=getRelatedSacredPlaces&elementoSacroId=${elementoId}`);
         const relatedPlaces = await response.json();
 
         if (relatedPlaces.length > 0) {
