@@ -117,7 +117,7 @@ if (elemento.coordinates && elemento.coordinates.coordinates) {
 
 // Funzione per chiudere il modulo di modifica
 function closeEditForm() {
-    document.getElementById('editFormContainer').style.display = 'none';
+    document.getElementById('editElementForm').style.display = 'none';
 }
 
 async function saveChanges(elementoId) {
