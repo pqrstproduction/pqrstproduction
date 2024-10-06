@@ -11,29 +11,34 @@ async function fetchElementiSacri() {
     }
 }
 
-async function fetchRelatedSacredPlaces(elementoId, elementDiv) {
+async function fetchRelatedSacredPlaces(elementoId) {
+    const elementDiv = document.querySelector(`[data-id="${elementoId}"]`); // Trova il div dell'elemento
+
+    // Effettua la richiesta per ottenere i luoghi correlati
     try {
-        const response = await fetch(`${apiBaseUrl}?endpoint=getRelatedSacredPlaces&elementoSacroId=${elementoId}`);
+        const response = await fetch(`/api/related-sacred-places/${elementoId}`);
         const relatedPlaces = await response.json();
 
-        // Aggiungi i luoghi sacri correlati all'elemento
-        const relatedPlacesDiv = document.createElement('div');
-        relatedPlacesDiv.className = 'related-places';
-        
         if (relatedPlaces.length > 0) {
-            relatedPlacesDiv.innerHTML = `<strong>Luoghi Sacri Correlati:</strong> <br>`;
+            // Crea una lista per visualizzare i luoghi correlati
+            const relatedList = document.createElement('ul');
             relatedPlaces.forEach(place => {
-                relatedPlacesDiv.innerHTML += `${place.name} (ID: ${place._id})<br>`;
+                const listItem = document.createElement('li');
+                listItem.textContent = place.name; // Mostra il nome del luogo
+                relatedList.appendChild(listItem);
             });
-        } else {
-            relatedPlacesDiv.innerHTML = `<strong>Luoghi Sacri Correlati:</strong> N/A <br>`;
-        }
 
-        elementDiv.appendChild(relatedPlacesDiv);
+            // Aggiungi la lista di luoghi correlati al div dell'elemento
+            elementDiv.appendChild(relatedList);
+        } else {
+            elementDiv.innerHTML += '<p>Nessun luogo sacro correlato trovato.</p>';
+        }
     } catch (error) {
-        console.error('Errore nel recupero dei luoghi sacri correlati:', error);
+        console.error('Errore nel recupero dei luoghi correlati:', error);
+        elementDiv.innerHTML += '<p>Errore nel recupero dei luoghi correlati.</p>';
     }
 }
+
 
 function displayElementiSacri(elementi) {
     const container = document.getElementById('elementsContainer');
