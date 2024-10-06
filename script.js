@@ -79,14 +79,9 @@ async function fetchRelatedSacredPlaces(elementoId) {
 function editRelatedPlace(place) {
     // Mostra un popup o un modulo per modificare il luogo correlato
     alert(`Modifica il luogo: ${place.name}`);
+    editElemento(place)
 }
 
-
-// Funzione per modificare il luogo correlato
-function editRelatedPlace(place) {
-    // Mostra un popup o un modulo per modificare il luogo correlato
-    alert(`Modifica il luogo: ${place.name}`);
-}
 
 
 function displayElementiSacri(elementi) {
