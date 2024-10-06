@@ -22,6 +22,7 @@ h1, h2, h3, h4 {
 
 /* Stile per gli elementi */
 .element {
+    margin: 10px;
     background-color: #fff;
     border: 1px solid #ddd;
     border-radius: 5px;
