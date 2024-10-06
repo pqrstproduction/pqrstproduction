@@ -23,7 +23,7 @@ async function fetchRelatedSacredPlaces(elementoId, elementDiv) {
         if (relatedPlaces.length > 0) {
             relatedPlacesDiv.innerHTML = `<strong>Luoghi Sacri Correlati:</strong> <br>`;
             relatedPlaces.forEach(place => {
-                relatedPlacesDiv.innerHTML += `${place.name} (ID: ${place.id})<br>`;
+                relatedPlacesDiv.innerHTML += `${place.name} (ID: ${place._id})<br>`;
             });
         } else {
             relatedPlacesDiv.innerHTML = `<strong>Luoghi Sacri Correlati:</strong> N/A <br>`;
