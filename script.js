@@ -65,13 +65,13 @@ async function fetchRelatedSacredPlaces(elementoId) {
         }
 
         // Mostra il modale
-        $('#relatedPlacesModal').modal('show');
+        document.getElementById('relatedPlacesModal').modal('show');
     } catch (error) {
         hideLoader();
         console.error('Errore nel recupero dei luoghi correlati:', error);
         const modalBody = document.getElementById('relatedPlacesModalBody');
         modalBody.innerHTML = '<p>Errore nel recupero dei luoghi correlati.</p>';
-        $('#relatedPlacesModal').modal('show'); // Mostra comunque il modale
+        document.getElementById('relatedPlacesModal').modal('show');
     }
 }
 
