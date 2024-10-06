@@ -60,7 +60,26 @@
             <button type="button" id="addDynamicField" class="btn btn-secondary">Aggiungi Campo Dinamico</button><br>
             <button type="submit" class="btn btn-primary">Aggiungi Elemento Sacro</button>
         </form>
-    
+        <!-- Modale per i luoghi correlati -->
+        <div class="modal fade" id="relatedPlacesModal" tabindex="-1" role="dialog" aria-labelledby="relatedPlacesModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="relatedPlacesModalLabel">Luoghi Correlati</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="relatedPlacesModalBody">
+                <!-- Qui verranno inseriti dinamicamente i luoghi correlati -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Chiudi</button>
+            </div>
+            </div>
+        </div>
+        </div>
+  
         <div id="editElementForm" style="display: none;">
             <h3>Modifica Elemento Sacro</h3>
             <form id="formEditElemento">

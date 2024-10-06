@@ -26,13 +26,6 @@ async function fetchElementiSacri() {
     }
 }
 async function fetchRelatedSacredPlaces(elementoId) {
-    const elementDiv = document.querySelector(`[data-id="${elementoId}"]`); // Trova il div dell'elemento
-
-    // Verifica se la lista è già stata visualizzata per evitare duplicati
-    if (elementDiv.querySelector('.related-places-list')) {
-        elementDiv.querySelector('.related-places-list').remove(); // Rimuovi la lista se già presente
-    }
-
     // Effettua la richiesta per ottenere i luoghi correlati
     try {
         showLoader();
@@ -40,14 +33,13 @@ async function fetchRelatedSacredPlaces(elementoId) {
         const relatedPlaces = await response.json();
         hideLoader();
 
-        const relatedPlacesDiv = document.createElement('div');
-        relatedPlacesDiv.classList.add('related-places-list');
-        relatedPlacesDiv.style.animation = 'fadeIn 0.3s ease-in-out';
+        const modalBody = document.getElementById('relatedPlacesModalBody');
+        modalBody.innerHTML = ''; // Pulisci il contenuto precedente
 
         if (relatedPlaces.length > 0) {
             // Crea una lista per visualizzare i luoghi correlati
             const relatedList = document.createElement('ul');
-            relatedList.className = 'list-group mt-3'; // Stile Bootstrap
+            relatedList.className = 'list-group'; // Stile Bootstrap
 
             relatedPlaces.forEach(place => {
                 const listItem = document.createElement('li');
@@ -66,20 +58,29 @@ async function fetchRelatedSacredPlaces(elementoId) {
                 relatedList.appendChild(listItem);
             });
 
-            // Aggiungi la lista di luoghi correlati al div dell'elemento
-            relatedPlacesDiv.appendChild(relatedList);
+            // Aggiungi la lista di luoghi correlati al modale
+            modalBody.appendChild(relatedList);
         } else {
-            relatedPlacesDiv.innerHTML = '<p class="mt-3">Nessun luogo sacro correlato trovato.</p>';
+            modalBody.innerHTML = '<p>Nessun luogo sacro correlato trovato.</p>';
         }
 
-        elementDiv.appendChild(relatedPlacesDiv);
-
+        // Mostra il modale
+        $('#relatedPlacesModal').modal('show');
     } catch (error) {
         hideLoader();
         console.error('Errore nel recupero dei luoghi correlati:', error);
-        elementDiv.innerHTML += '<p>Errore nel recupero dei luoghi correlati.</p>';
+        const modalBody = document.getElementById('relatedPlacesModalBody');
+        modalBody.innerHTML = '<p>Errore nel recupero dei luoghi correlati.</p>';
+        $('#relatedPlacesModal').modal('show'); // Mostra comunque il modale
     }
 }
+
+// Funzione per modificare il luogo correlato
+function editRelatedPlace(place) {
+    // Mostra un popup o un modulo per modificare il luogo correlato
+    alert(`Modifica il luogo: ${place.name}`);
+}
+
 
 // Funzione per modificare il luogo correlato
 function editRelatedPlace(place) {
